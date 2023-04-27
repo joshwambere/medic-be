@@ -57,7 +57,18 @@ public class Database {
 
 
     public static void addConsultation(Consultation consultation) {
-        consultations.put(consultation.getDiagnosis(), consultation);
+        consultations.put(consultation.getId(), consultation);
+    }
+
+    public static List<Consultation> getConsultations(String patientId) {
+        List<Consultation> cons = new ArrayList<>();
+
+        for (Consultation consultation : consultations.values()) {
+            if (consultation.getPatientId().equals(patientId)) {
+                cons.add(consultation);
+            }
+        }
+        return cons;
     }
 
     public static void addPrescription(Prescription prescription) {

@@ -3,6 +3,7 @@ package com.medic.servlet.user.servlets;
 import com.medic.servlet.db.Database;
 import com.medic.servlet.user.dtos.PhyisicianDto;
 import com.medic.servlet.user.dtos.Role;
+import com.medic.servlet.user.models.Consultation;
 import com.medic.servlet.user.models.User;
 import com.medic.servlet.utils.ApiResponse;
 import com.medic.servlet.utils.JsonUtil;
@@ -29,6 +30,8 @@ public class PatientServlet extends HttpServlet {
         String token = req.getHeader("Authorization");
         PhyisicianDto phyisicianDto = new JsonUtil().parseBodyJson(req, PhyisicianDto.class);
         User user = TokenUtil.getUserFromToken(token);
+
+        // CHECK IF USER IS LOGGED IN
         if (user == null) {
             ResponseEntity.send(res, new ApiResponse<>("Unauthorized", null), HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -38,6 +41,14 @@ public class PatientServlet extends HttpServlet {
         if (user != null) {
             permissions = user.getPermissions();
             permissions.add(phyisicianDto.id);
+
+            //CREATE CONSULTATION OBJECT
+            Consultation consultation = new Consultation();
+            consultation.setPatientId(user.getId());
+            consultation.setPhysicianId(phyisicianDto.id);
+            Database.addConsultation(consultation);
+
+            // ADD PERMISSIONS TO USER
             for (User u : users) {
                 if (u.getId().equals(phyisicianDto.id)) {
                     u.setPermissions(permissions);

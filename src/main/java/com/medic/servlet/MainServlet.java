@@ -15,6 +15,9 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("==================");
+        System.out.println("MainServlet");
+        System.out.println("==================");
         ResponseEntity.send(resp, new ApiResponse<>("Hey There!", null), HttpServletResponse.SC_OK);
     }
 }

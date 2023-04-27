@@ -3,9 +3,11 @@ package com.medic.servlet.user.servlets;
 import com.medic.servlet.db.Database;
 import com.medic.servlet.user.dtos.PrescriptionDto;
 import com.medic.servlet.user.dtos.Role;
-import com.medic.servlet.user.models.Prescription;
+import com.medic.servlet.user.models.Consultation;
+import com.medic.servlet.user.models.Medicine;
 import com.medic.servlet.user.models.User;
 import com.medic.servlet.utils.ApiResponse;
+import com.medic.servlet.utils.CSVUtil;
 import com.medic.servlet.utils.JsonUtil;
 import com.medic.servlet.utils.ResponseEntity;
 
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,19 +36,35 @@ public class PharmacistServlet extends HttpServlet {
         List<User> users = Database.getUsers();
         User patient = users.stream().filter(user -> user.getId().equals(consultationDto.patientId)).findFirst().orElse(null);
 
+
         if (patient != null) {
+            // Check if the PHARMACIST has the permission to access the consultation
             if (patient.getPermissions().stream().filter(permission -> permission.equals(consultationDto.pharmacistId)).findFirst().orElse(null) == null) {
                 ResponseEntity.send(res, new ApiResponse<>("Unauthorized", null), HttpServletResponse.SC_UNAUTHORIZED);
             } else {
-                Prescription prescription = new Prescription();
-                prescription.setPatientId(consultationDto.patientId);
-                prescription.setPharmacistId(consultationDto.pharmacistId);
-                prescription.setMedName(consultationDto.medName);
-                prescription.setMedPrice(consultationDto.medPrice);
-                prescription.setMedExpDate(consultationDto.medExpDate);
+                // Check if the consultation exists
+                Consultation prescription = Database.getConsultations(patient.getId()).stream().filter(consultation -> consultation.getId().equals(consultationDto.consultationId)).findFirst().orElse(null);
 
-                Database.addPrescription(prescription);
-                ResponseEntity.send(res, new ApiResponse<>("Consultation Succeeded", prescription), HttpServletResponse.SC_OK);
+                if (prescription != null) {
+                    List<Medicine> availableMedicine = CSVUtil.readCSV("medicines.csv");
+                    List<Medicine> medicines = new ArrayList<Medicine>();
+                    for (Medicine med : availableMedicine) {
+                        if (med.getMedName().equals(consultationDto.medName)) {
+                            medicines.add(med);
+                        }
+                    }
+
+                    // Check if the medicine exists
+                    if (!medicines.isEmpty()) {
+                        prescription.setMedicines(medicines);
+                        Database.addConsultation(prescription);
+                        ResponseEntity.send(res, new ApiResponse<>("Consultation Succeeded", null), HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        ResponseEntity.send(res, new ApiResponse<>("Medicine not found1", null), HttpServletResponse.SC_NOT_FOUND);
+                    }
+                } else {
+                    ResponseEntity.send(res, new ApiResponse<>("Consultation not found", null), HttpServletResponse.SC_NOT_FOUND);
+                }
             }
 
         } else {

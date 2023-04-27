@@ -52,8 +52,10 @@ public class PhysicianServlet extends HttpServlet {
                 ResponseEntity.send(res, new ApiResponse<>("Consultation Succeeded", consultation), HttpServletResponse.SC_OK);
             }
 
+        }else{
+            ResponseEntity.send(res, new ApiResponse<>("Something went wrong", null), HttpServletResponse.SC_FORBIDDEN);
         }
-        ResponseEntity.send(res, new ApiResponse<>("Something went wrong", null), HttpServletResponse.SC_FORBIDDEN);
+
 
     }
 }

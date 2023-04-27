@@ -5,7 +5,7 @@ import com.medic.servlet.utils.ApiResponse;
 import com.medic.servlet.utils.TokenUtil;
 
 import javax.naming.AuthenticationException;
-import java.util.List;
+
 
 public class Patient extends User {
     @Override

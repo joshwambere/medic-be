@@ -19,9 +19,7 @@ import java.util.UUID;
 public abstract class User {
     private String id;
     @NonNull
-    private String firstName;
-    @NonNull
-    private String lastName;
+    private String name;
     private  String userName;
     @NonNull
     private String email;
