@@ -1,0 +1,16 @@
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/servlets/SignupServlet.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/utils/ApiResponse.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/models/Pharmacist.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/MainServlet.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/models/Patient.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/dtos/Role.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/servlets/LoginServlet.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/utils/JsonUtil.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/utils/CorsFilter.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/utils/ResponseEntity.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/models/User.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/servlets/ProfileServlet.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/utils/TokenUtil.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/models/Physician.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/user/dtos/Gender.java
+/Users/awesomity/personal/403/medic/medic-be/src/main/java/com/medic/servlet/db/Database.java
