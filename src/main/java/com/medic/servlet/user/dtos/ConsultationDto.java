@@ -5,3 +5,5 @@ public class ConsultationDto {
     public String physicianId;
     public String diagnosis;
 }
+
+

@@ -40,12 +40,10 @@ public class SignupServlet extends HttpServlet {
                     break;
             }
 
-            newUser.setFirstName(user.getFirstName());
-            newUser.setLastName(user.getLastName());
+            newUser.setName(user.getName());
             newUser.setAge(user.getAge());
             newUser.setUserName(user.getUserName());
             newUser.setRole(user.getRole());
-            newUser.setCountry(user.getCountry());
             newUser.setPhone(user.getPhone());
             newUser.setEmail(user.getEmail());
             newUser.setPassword(user.getPassword());

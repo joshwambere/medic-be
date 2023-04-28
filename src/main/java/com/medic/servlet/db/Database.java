@@ -71,6 +71,10 @@ public class Database {
         return cons;
     }
 
+    public static List<Consultation> getConsultation() {
+        return new ArrayList<>(consultations.values());
+    }
+
     public static void addPrescription(Prescription prescription) {
         prescriptions.put(prescription.getMedName(), prescription);
     }

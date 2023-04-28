@@ -29,7 +29,6 @@ public abstract class User {
     private Gender gender;
     private Integer age;
     private Long phone;
-    private String country;
     private Role role;
     private List<String> permissions = new ArrayList<>();
 

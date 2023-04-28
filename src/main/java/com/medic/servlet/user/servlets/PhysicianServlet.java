@@ -24,7 +24,7 @@ public class PhysicianServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users = Database.GetUserByRole(Role.PHYSICIAN);
-        users.sort(Comparator.comparing(User::getFirstName));
+        users.sort(Comparator.comparing(User::getName));
         ResponseEntity.send(resp, new ApiResponse<>("Success", users), HttpServletResponse.SC_OK);
 
     }
