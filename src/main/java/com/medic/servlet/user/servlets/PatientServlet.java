@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 @WebServlet("/patients")
@@ -46,6 +47,8 @@ public class PatientServlet extends HttpServlet {
             Consultation consultation = new Consultation();
             consultation.setPatientId(user.getId());
             consultation.setPhysicianId(phyisicianDto.id);
+            consultation.setSymptoms(phyisicianDto.symptoms);
+            consultation.setDate(Instant.now());
             Database.addConsultation(consultation);
 
             // ADD PERMISSIONS TO USER

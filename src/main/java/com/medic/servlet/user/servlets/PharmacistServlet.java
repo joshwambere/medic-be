@@ -58,9 +58,9 @@ public class PharmacistServlet extends HttpServlet {
                     if (!medicines.isEmpty()) {
                         prescription.setMedicines(medicines);
                         Database.addConsultation(prescription);
-                        ResponseEntity.send(res, new ApiResponse<>("Consultation Succeeded", null), HttpServletResponse.SC_NOT_FOUND);
+                        ResponseEntity.send(res, new ApiResponse<>("Prescription Succeeded", null), HttpServletResponse.SC_OK);
                     } else {
-                        ResponseEntity.send(res, new ApiResponse<>("Medicine not found1", null), HttpServletResponse.SC_NOT_FOUND);
+                        ResponseEntity.send(res, new ApiResponse<>("Medicine not found", null), HttpServletResponse.SC_NOT_FOUND);
                     }
                 } else {
                     ResponseEntity.send(res, new ApiResponse<>("Consultation not found", null), HttpServletResponse.SC_NOT_FOUND);

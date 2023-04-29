@@ -21,11 +21,21 @@ public class ConsultationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PatientDto patient = new JsonUtil().parseBodyJson(req, PatientDto.class);
-        System.out.println(patient.id);
         List<Consultation> cons = Database.getConsultations(patient.id);
-        System.out.println(cons);
 
         ResponseEntity.send(resp, new ApiResponse<>("Success", cons), HttpServletResponse.SC_OK);
     }
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PatientDto patient = new JsonUtil().parseBodyJson(req, PatientDto.class);
+        List<Consultation> cons = Database.getConsultations(patient.id);
+
+        List<Consultation> filteredCons = cons.stream()
+                .filter(consultation -> !consultation.getMedicines().isEmpty())
+                .collect(java.util.stream.Collectors.toList());
+
+        ResponseEntity.send(resp, new ApiResponse<>("Success", filteredCons), HttpServletResponse.SC_OK);
+    }
+
 
 }
