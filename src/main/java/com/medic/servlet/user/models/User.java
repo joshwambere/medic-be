@@ -28,7 +28,7 @@ public abstract class User {
     private String password;
     private Gender gender;
     private Integer age;
-    private Long phone;
+    private String phone;
     private Role role;
     private List<String> permissions = new ArrayList<>();
 

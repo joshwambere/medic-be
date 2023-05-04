@@ -36,6 +36,4 @@ public class ConsultationServlet extends HttpServlet {
 
         ResponseEntity.send(resp, new ApiResponse<>("Success", filteredCons), HttpServletResponse.SC_OK);
     }
-
-
 }

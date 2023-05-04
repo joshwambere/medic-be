@@ -1,14 +1,14 @@
 package com.medic.servlet.user.servlets;
 
 import com.medic.servlet.db.Database;
+import com.medic.servlet.user.dtos.PatientDto;
 import com.medic.servlet.user.dtos.PhyisicianDto;
 import com.medic.servlet.user.dtos.Role;
-import com.medic.servlet.user.models.Consultation;
+import com.medic.servlet.user.models.Patient;
 import com.medic.servlet.user.models.User;
 import com.medic.servlet.utils.ApiResponse;
 import com.medic.servlet.utils.JsonUtil;
 import com.medic.servlet.utils.ResponseEntity;
-import com.medic.servlet.utils.TokenUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
+
 
 @WebServlet("/patients")
 public class PatientServlet extends HttpServlet {
@@ -27,39 +27,33 @@ public class PatientServlet extends HttpServlet {
         ResponseEntity.send(resp, new ApiResponse<>("Success", users), HttpServletResponse.SC_OK);
     }
 
+    // GRANT PERMISSION TO PHYSICIAN
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String token = req.getHeader("Authorization");
         PhyisicianDto phyisicianDto = new JsonUtil().parseBodyJson(req, PhyisicianDto.class);
-        User user = TokenUtil.getUserFromToken(token);
 
-        // CHECK IF USER IS LOGGED IN
-        if (user == null) {
+        Patient patient = new Patient();
+        boolean granted = patient.grantPermission(Role.PHYSICIAN,phyisicianDto.id,token, phyisicianDto );
+
+       if(granted) {
+           ResponseEntity.send(res, new ApiResponse<>("Success", null), HttpServletResponse.SC_OK);
+       }else {
+           ResponseEntity.send(res, new ApiResponse<>("Something went wrong", null), HttpServletResponse.SC_FORBIDDEN);
+       }
+    }
+
+
+    // GRANT PERMISSIONS TO PHARMACIST
+    protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+        Patient patient = new Patient();
+        String token = req.getHeader("Authorization");
+        PatientDto patientDto = new JsonUtil().parseBodyJson(req, PatientDto.class);
+        boolean granted = patient.grantPermission(Role.PHARMACIST,patientDto.id,token);
+
+        if(granted) {
+            ResponseEntity.send(res, new ApiResponse<>("Pharmacist granted Permission", null), HttpServletResponse.SC_OK);
+        }else {
             ResponseEntity.send(res, new ApiResponse<>("Unauthorized", null), HttpServletResponse.SC_UNAUTHORIZED);
         }
-
-        List<User> users = Database.getUsers();
-        List<String> permissions = null;
-        if (user != null) {
-            permissions = user.getPermissions();
-            permissions.add(phyisicianDto.id);
-
-            //CREATE CONSULTATION OBJECT
-            Consultation consultation = new Consultation();
-            consultation.setPatientId(user.getId());
-            consultation.setPhysicianId(phyisicianDto.id);
-            consultation.setSymptoms(phyisicianDto.symptoms);
-            consultation.setDate(Instant.now());
-            Database.addConsultation(consultation);
-
-            // ADD PERMISSIONS TO USER
-            for (User u : users) {
-                if (u.getId().equals(phyisicianDto.id)) {
-                    u.setPermissions(permissions);
-                    ResponseEntity.send(res, new ApiResponse<>("Success", u), HttpServletResponse.SC_OK);
-                }
-            }
-        }
-
-
     }
 }

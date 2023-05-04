@@ -2,6 +2,7 @@ package com.medic.servlet.user.servlets;
 
 import com.medic.servlet.user.models.Patient;
 import com.medic.servlet.user.models.Pharmacist;
+import com.medic.servlet.user.models.Physician;
 import com.medic.servlet.user.models.User;
 import com.medic.servlet.utils.ApiResponse;
 
@@ -23,6 +24,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = new JsonUtil().parseBodyJson(req, Patient.class);
+        Physician physician = new Physician();
         Patient patient = new Patient();
         Pharmacist pharmacist = new Pharmacist();
 
@@ -31,23 +33,27 @@ public class LoginServlet extends HttpServlet {
             String physicianRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
             String pharmacistRegex = "^\\d{10}$";
 
-            if (user.getUserName()!=null && Pattern.matches(physicianRegex, user.getUserName())) {
-                ApiResponse<String> result = user.login(user.getUserName(), user.getPassword());
-                ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
-            } else if (user.getUserName()!=null && Pattern.matches(patientRegex, user.getUserName())) {
-                ApiResponse<String> result = patient.login(user.getUserName(), user.getPassword());
-                ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
-            } else if (user.getUserName()!=null && Pattern.matches(pharmacistRegex, user.getUserName())) {
-                ApiResponse<String> result = pharmacist.login(user.getUserName(), user.getPassword());
-                ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
+            if (user.getUserName() != null) {
+                if (Pattern.matches(physicianRegex, user.getUserName())) {
+                    ApiResponse<String> result = physician.login(user.getUserName(), user.getPassword());
+                    ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
+                } else if (Pattern.matches(patientRegex, user.getUserName())) {
+                    ApiResponse<String> result = patient.login(user.getUserName(), user.getPassword());
+                    ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
+                } else if (Pattern.matches(pharmacistRegex, user.getUserName())) {
+                    ApiResponse<String> result = pharmacist.login(user.getUserName(), user.getPassword());
+                    ResponseEntity.send(resp, result, HttpServletResponse.SC_OK);
+                } else {
+                    ResponseEntity.send(resp, new ApiResponse<>("Something wrong with this function", null), HttpServletResponse.SC_FORBIDDEN);
+                }
             } else {
-                ResponseEntity.send(resp, new ApiResponse<>("Something wrong with this function", null), HttpServletResponse.SC_FORBIDDEN);
+                ResponseEntity.send(resp, new ApiResponse<>("Invalid username", null), HttpServletResponse.SC_BAD_REQUEST);
             }
-
         } catch (AuthenticationException e) {
             e.printStackTrace();
             ResponseEntity.send(resp, new ApiResponse<>(e.getMessage(), null), HttpServletResponse.SC_FORBIDDEN);
         }
+
 
     }
 }

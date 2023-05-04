@@ -1,6 +1,7 @@
 package com.medic.servlet.user.models;
 
 import com.medic.servlet.db.Database;
+import com.medic.servlet.user.dtos.Role;
 import com.medic.servlet.utils.ApiResponse;
 import com.medic.servlet.utils.TokenUtil;
 
@@ -26,6 +27,10 @@ public class Pharmacist extends User {
     public ApiResponse<String> login(String phone, String password) throws AuthenticationException {
         User foundUser = Database.findUser(phone);
         if (foundUser == null) throw new AuthenticationException("Invalid credentials");
+
+        //CHECK IF USER IS PHARMACIST
+        if (!foundUser.getRole().equals(Role.PHARMACIST)) throw new AuthenticationException("Not Allowed to login with username");
+
         if (!password.equals(foundUser.decryptPwd())) throw new AuthenticationException("Invalid credentials");
         String token = TokenUtil.generateJWT(foundUser.getUserName(), foundUser.getRole(), foundUser.getId());
         return new ApiResponse<>("Login Successful", token);

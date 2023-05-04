@@ -35,6 +35,10 @@ public class Database {
                     user = u;
                     break;
                 }
+                if (u.getPhone().equals(email)){
+                    user = u;
+                    break;
+                }
             }
         }
         return user;
